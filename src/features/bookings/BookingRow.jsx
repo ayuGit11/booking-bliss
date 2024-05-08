@@ -19,6 +19,8 @@ import { formatDistanceFromNow } from "../../utils/helper";
 import { format, isToday } from "date-fns";
 import { useCheckout } from "../check-in-out/useCheckout";
 import { useDeleteBooking } from "./useDeleteBooking";
+import toast from "react-hot-toast";
+import { useEditBooking } from "./useEditBooking";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -47,25 +49,22 @@ const Amount = styled.div`
   font-weight: 500;
 `;
 
-function BookingRow({
-  booking: {
+function BookingRow({ booking }) {
+  var {
     id: bookingId,
-    created_at,
     startDate,
     endDate,
     numNights,
-    numGuests,
     totalPrice,
     status,
-    guests: { fullName: guestName, email },
-    cabins: { name: cabinName },
-  },
-}) {
+    guests: { fullName: guestName, email, id: guestId, numOfVisits: visit },
+    cabins: { name: cabinName, totalPrice: cabinPrice },
+    packages: { totalPrice: packagePrice },
+  } = booking;
   const { deleteBooking, isDeleting } = useDeleteBooking();
+  const { isEditing, editBooking } = useEditBooking();
   const { checkout, isCheckingOut } = useCheckout();
-
   const navigate = useNavigate();
-
   // We will not allow editing at this point, as it's too complex for bookings... People just need to delete a booking and create a new one
 
   const statusToTagName = {
@@ -73,16 +72,23 @@ function BookingRow({
     "checked-in": "green",
     "checked-out": "silver",
   };
-
+  const isOffer = visit > 2 ? true : false;
+  var offPrice = 0;
+  if (visit > 3) {
+    offPrice = 0.3 * totalPrice;
+  }
+  if (visit === 2) {
+    offPrice = 0.2 * totalPrice;
+  }
+  totalPrice = packagePrice + cabinPrice - offPrice;
   return (
     <Table.Row role="row">
       <Cabin>{cabinName}</Cabin>
-
       <Stacked>
-        <span>{guestName}</span>
+        <span>{guestName && guestName}</span>
         <span>{email}</span>
+        <span>GuestId:{guestId}</span>
       </Stacked>
-
       <Stacked>
         <span>
           {isToday(new Date(startDate))
@@ -95,11 +101,10 @@ function BookingRow({
           {format(new Date(endDate), "MMM dd yyyy")}
         </span>
       </Stacked>
-
-      <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
-
+      <Tag type={statusToTagName[status]}>
+        {status && status.replace("-", " ")}
+      </Tag>
       <Amount>{formatCurrency(totalPrice)}</Amount>
-
       <Modal>
         <Menus.Menu>
           <Menus.Toggle id={bookingId} />
@@ -112,7 +117,18 @@ function BookingRow({
             </Menus.Button>
             {status === "unconfirmed" && (
               <Menus.Button
-                onClick={() => navigate(`/checkin/${bookingId}`)}
+                onClick={() => {
+                  navigate(`/checkin/${bookingId}`);
+                  if (isOffer) {
+                    toast.success(
+                      `Congratulations🥳🥳 You get ${offPrice} off on your booking.`
+                    );
+                    editBooking({
+                      newBookingData: { totalPrice, offPrice },
+                      id: bookingId,
+                    });
+                  }
+                }}
                 icon={<HiArrowDownOnSquare />}
               >
                 Check in
@@ -120,7 +136,10 @@ function BookingRow({
             )}
             {status === "checked-in" && (
               <Menus.Button
-                onClick={() => checkout(bookingId)}
+                onClick={() => {
+                  checkout(bookingId);
+                  navigate(`/checkout/${bookingId}`);
+                }}
                 disabled={isCheckingOut}
                 icon={<HiArrowUpOnSquare />}
               >
@@ -128,7 +147,6 @@ function BookingRow({
               </Menus.Button>
             )}
 
-            {/* <Menus.Button icon={<HiPencil />}>Edit booking</Menus.Button> */}
             {/* <Menus.Button>Delete</Menus.Button> */}
             <Modal.Open opens="delete">
               <Menus.Button icon={<HiTrash />}>Delete booking</Menus.Button>
@@ -142,24 +160,10 @@ function BookingRow({
             resourceName="booking"
             // These options will be passed wherever the function gets called, and they determine what happens next
             onConfirm={() => deleteBooking(bookingId)}
-            disabled={isDeleting}
+            disabled={isDeleting || isEditing}
           />
         </Modal.Window>
       </Modal>
-
-      {/* <div>
-        <ButtonWithConfirm
-          title='Delete booking'
-          description='Are you sure you want to delete this booking? This action can NOT be undone.'
-          confirmBtnLabel='Delete'
-          onConfirm={() => deleteBooking(bookingId)}
-          disabled={isDeleting}
-        >
-          Delete
-        </ButtonWithConfirm>
-
-        <Link to={`/bookings/${bookingId}`}>Details &rarr;</Link>
-      </div> */}
     </Table.Row>
   );
 }

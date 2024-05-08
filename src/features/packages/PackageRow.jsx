@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { formatCurrency } from "../../utils/helper";
-import CreateCabinForm from "./CreateCabinForm";
-import { useDeleteCabin } from "./useDeleteCabin";
+import CreatePackageForm from "./CreatePackageForm";
+import { useDeletePackage } from "./useDeletePackage";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Table from "../../ui/Table";
@@ -29,7 +29,7 @@ const Img = styled.img`
   transform: scale(1.5) translateX(-7px);
 `;
 
-const Cabin = styled.div`
+const Package = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--color-grey-600);
@@ -47,22 +47,15 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-function CabinRow({ cabin }) {
-  const { isDeleting, deleteCabin } = useDeleteCabin();
-  const {
-    id: cabinId,
-    name,
-    maxCapacity,
-    regularPrice,
-    discount,
-    image,
-  } = cabin;
+function PackageRow({ pack }) {
+  const { isDeleting, deletePackage } = useDeletePackage();
+  const { id: packageId, name, price, discount, image, description } = pack;
   return (
     <Table.Row>
       <Img src={image} />
-      <Cabin>{name}</Cabin>
-      <div>Fits upto {maxCapacity}</div>
-      <Price>{formatCurrency(regularPrice)}</Price>
+      <Package> {name}</Package>
+      <Package> {description}</Package>
+      <Price>{formatCurrency(price)}</Price>
       {discount ? (
         <Discount>{formatCurrency(discount)}</Discount>
       ) : (
@@ -71,8 +64,8 @@ function CabinRow({ cabin }) {
       <div>
         <Modal>
           <Menus.Menu>
-            <Menus.Toggle id={cabinId} />
-            <Menus.List id={cabinId}>
+            <Menus.Toggle id={packageId} />
+            <Menus.List id={packageId}>
               <Modal.Open opens="edit">
                 <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
               </Modal.Open>
@@ -82,13 +75,13 @@ function CabinRow({ cabin }) {
             </Menus.List>
 
             <Modal.Window name="edit">
-              <CreateCabinForm cabinToEdit={cabin} />
+              <CreatePackageForm packageToEdit={pack} />
             </Modal.Window>
             <Modal.Window name="delete">
               <ConfirmDelete
-                resourceName="cabins"
+                resourceName="packages"
                 disabled={isDeleting}
-                onConfirm={() => deleteCabin(cabinId)}
+                onConfirm={() => deletePackage(packageId)}
               />
             </Modal.Window>
           </Menus.Menu>
@@ -97,7 +90,10 @@ function CabinRow({ cabin }) {
     </Table.Row>
   );
 }
-CabinRow.propTypes = {
-  cabin: PropTypes.object.isRequired, // Adjust the prop type according to your cabin object structure
+PackageRow.propTypes = {
+  package: PropTypes.object.isRequired, // Adjust the prop type according to your cabin object structure
 };
-export default CabinRow;
+export default PackageRow;
+//https://tnbnzgnztbodhoyhfxmd.supabase.
+//co/storage/v1/object/sign/cabin-images/0.6108623110250893-cabin-003.
+//jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJjYWJpbi1pbWFnZXMvMC4wNDU5ODkyODU0NDE5MjQ2LWNhYmluLTAwMi5qcGciLCJpYXQiOjE3MTIzNzQ4MTUsImV4cCI6MTc0MzkxMDgxNX0.I5nq1UjXYWJyO8wxKsjGL0GhEnKYg7TFGL9rK0KiMk0&t=2024-04-06T03%3A40%3A15.247Z
