@@ -1,6 +1,6 @@
-# Nature's Escape
+# Booking_Bliss
 #To open this project please click below link
 
-https://booking-bliss.netlify.app
+https://bookingbliss.netlify.app
 
 A project built for the purpose of managing the hotel booking system and digitalise it,in an efficient way.
