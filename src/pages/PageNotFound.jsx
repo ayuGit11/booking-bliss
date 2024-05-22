@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import { useMoveBack } from "../hooks/useMoveBack";
 import Heading from "../ui/Heading";
+import Button from "../ui/Button";
 
 const StyledPageNotFound = styled.main`
   height: 100vh;
@@ -26,7 +27,10 @@ const Box = styled.div`
     margin-bottom: 3.2rem;
   }
 `;
-
+const Buttont = styled(Button)`
+  color: #09a183;
+  font-weight: bolder;
+`;
 function PageNotFound() {
   const moveBack = useMoveBack();
 
@@ -36,9 +40,7 @@ function PageNotFound() {
         <Heading as="h1">
           The page you are looking for could not be found 😢
         </Heading>
-        <button onClick={moveBack} size="large">
-          &larr; Go back
-        </button>
+        <Buttont onClick={moveBack}>&larr; Go back</Buttont>
       </Box>
     </StyledPageNotFound>
   );

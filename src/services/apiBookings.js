@@ -45,6 +45,20 @@ export async function getBooking(id) {
 
   return data;
 }
+
+export async function fetchBookingId(guestId) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("id,totalPrice,guests(*),cabins(*)")
+    .eq("guestId", guestId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+}
+
 export async function createEditBooking(newBooking, id) {
   try {
     // Fetch cabin price

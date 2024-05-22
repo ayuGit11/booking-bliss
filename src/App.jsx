@@ -24,6 +24,8 @@ import DisplayCabin from "./features/cabins/DisplayCabin";
 import UserHome from "./ui/UserHome";
 import DisplayCabinDetails from "./features/cabins/DisplayCabinDetails";
 import UserBookCabin from "./features/cabins/UserBookCabin";
+import UserBookingDetails from "./features/bookings/UserBookingDetails";
+import UserDetails from "./features/guests/UserDetails";
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60 * 1000 } },
 });
@@ -71,6 +73,14 @@ export default function App() {
               <Route
                 path="/users/cabins/:cabinId/book"
                 element={<UserBookCabin />}
+              />
+              <Route
+                path="/users/cabins/:cabinId/book/:guestId"
+                element={<UserDetails />}
+              />
+              <Route
+                path="/users/cabins/:cabinId/book/:guestId/:bookingId"
+                element={<UserBookingDetails />}
               />
             </Route>
             <Route path="/*" element={<PageNotFound />} />

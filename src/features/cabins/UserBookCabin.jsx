@@ -5,12 +5,16 @@ import Modal from "../../ui/Modal";
 import UserCreateBookingForm from "./UserCreateBookingForm";
 import CreateGuestForm from "../guests/CreateGuestForm";
 import { useCabin } from "./useCabin";
+import UserForm from "../guests/UserForm";
 
 const UserBookCabinContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 100px;
+  background-color: var(--color-orange-200);
+  border-radius: 20px;
+  padding: 40px;
 `;
 
 const FormBox = styled.div`
@@ -23,6 +27,10 @@ const FormBox = styled.div`
   text-align: center;
 `;
 
+const InfoSection = styled.div`
+  margin-bottom: 30px;
+`;
+
 const ToggleButtonContainer = styled.div`
   text-align: center;
   margin-top: 20px;
@@ -30,7 +38,31 @@ const ToggleButtonContainer = styled.div`
 
 const InfoText = styled.p`
   font-size: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  color: var(--color-silver-700);
+  font-weight: bold;
+`;
+
+const StyledButton = styled(Button)`
+  background-color: #007bff;
+  color: white;
+  margin: 10px;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const SectionTitle = styled.h3`
+  margin-bottom: 10px;
+  color: var(--color-new-200);
+  font-weight: bold;
+`;
+
+const ModalContent = styled.div`
+  padding: 20px;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.5;
 `;
 
 function UserBookCabin() {
@@ -40,37 +72,59 @@ function UserBookCabin() {
     <UserBookCabinContainer>
       <FormBox>
         {isNewUser ? (
-          <div>
+          <InfoSection>
+            <SectionTitle>New Guest Registration</SectionTitle>
             <InfoText>Please add a new guest first.</InfoText>
-            <InfoText>Please be carefull while adding yourself.</InfoText>
+            <InfoText>Please be careful while adding yourself.</InfoText>
             <InfoText>We need your national Id number for adding you.</InfoText>
             <Modal>
               <Modal.Open opens="guest-form">
-                <Button>Add new Guest</Button>
+                <StyledButton>Add new Guest</StyledButton>
               </Modal.Open>
               <Modal.Window name="guest-form">
-                <CreateGuestForm />
+                <ModalContent>
+                  <CreateGuestForm />
+                </ModalContent>
               </Modal.Window>
             </Modal>
-          </div>
+          </InfoSection>
         ) : (
-          <div>
-            <InfoText>You can now add a booking.</InfoText>
-            <Modal>
-              <Modal.Open opens="booking-form">
-                <Button>Add new Booking</Button>
-              </Modal.Open>
-              <Modal.Window name="booking-form">
-                <UserCreateBookingForm cabin={cabin} key={cabin.id} />
-              </Modal.Window>
-            </Modal>
-          </div>
+          <>
+            <InfoSection>
+              <SectionTitle>Booking Options</SectionTitle>
+              <InfoText>You can now add a booking.</InfoText>
+              <Modal>
+                <Modal.Open opens="booking-form">
+                  <StyledButton>Add new Booking</StyledButton>
+                </Modal.Open>
+                <Modal.Window name="booking-form">
+                  <ModalContent>
+                    <UserCreateBookingForm cabin={cabin} key={cabin.id} />
+                  </ModalContent>
+                </Modal.Window>
+              </Modal>
+            </InfoSection>
+            <InfoSection>
+              <SectionTitle>Your Bookings</SectionTitle>
+              <InfoText>See Your booking details</InfoText>
+              <Modal>
+                <Modal.Open opens="booking-form">
+                  <StyledButton>Existing Booking</StyledButton>
+                </Modal.Open>
+                <Modal.Window name="booking-form">
+                  <ModalContent>
+                    <UserForm />
+                  </ModalContent>
+                </Modal.Window>
+              </Modal>
+            </InfoSection>
+          </>
         )}
       </FormBox>
       <ToggleButtonContainer>
-        <Button onClick={() => setIsNewUser(!isNewUser)}>
+        <StyledButton onClick={() => setIsNewUser(!isNewUser)}>
           {isNewUser ? "I'm an existing user" : "I'm a new user"}
-        </Button>
+        </StyledButton>
       </ToggleButtonContainer>
     </UserBookCabinContainer>
   );

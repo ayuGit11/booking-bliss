@@ -33,6 +33,7 @@ const GlobalStyles = createGlobalStyle`
 
   --color-orange-200: #fed7aa;
   --color-teal-200:#99f6e4;
+  --color-new-200:#e93ea5;
 
 
   --backdrop-color: rgba(255, 255, 255, 0.1);
@@ -76,6 +77,7 @@ const GlobalStyles = createGlobalStyle`
 
 --color-orange-200: #c2410c;
 --color-teal-200:#0d9488;
+--color-new-200:#5fdbe9;
 
 --backdrop-color: rgba(0, 0, 0, 0.3);
 
