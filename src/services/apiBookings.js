@@ -46,19 +46,48 @@ export async function getBooking(id) {
   return data;
 }
 export async function createEditBooking(newBooking, id) {
-  let query = supabase.from("bookings");
-  if (!id) query = query.insert([newBooking]);
-  if (id) query = query.update(newBooking).eq("id", id);
-  const { data, error } = await query.select().single();
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be created");
-  }
-  return data;
-}
+  try {
+    // Fetch cabin price
+    const { data: cabin, error: cabinError } = await supabase
+      .from("cabins")
+      .select("totalPrice")
+      .eq("id", newBooking.cabinId)
+      .single();
+    if (cabinError) throw cabinError;
 
-// Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
-// date: ISOString
+    // Fetch package price
+    const { data: pack, error: packageError } = await supabase
+      .from("packages")
+      .select("price")
+      .eq("id", newBooking.packageId)
+      .single();
+    if (packageError) throw packageError;
+
+    // Calculate total price
+    const totalPrice = cabin.totalPrice + pack.price;
+
+    // Prepare new booking with total price
+    const bookingWithPrice = { ...newBooking, totalPrice };
+
+    // Insert or update booking
+    let query = supabase.from("bookings");
+    if (!id) {
+      query = query.insert([bookingWithPrice]);
+    } else {
+      query = query.update(bookingWithPrice).eq("id", id);
+    }
+
+    const { data, error } = await query.select().single();
+    if (error) {
+      console.error(error);
+      throw new Error("Booking could not be created or updated");
+    }
+    return data;
+  } catch (error) {
+    console.error("Error creating or updating booking:", error.message);
+    throw new Error("Booking could not be created or updated");
+  }
+}
 export async function getBookingsAfterDate(date) {
   const { data, error } = await supabase
     .from("bookings")

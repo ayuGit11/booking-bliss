@@ -7,7 +7,20 @@ export async function getGuests() {
   }
   return guests;
 }
+export async function getGuest(id) {
+  const { data, error } = await supabase
+    .from("guests")
+    .select("*")
+    .eq("id", id)
+    .single();
 
+  if (error) {
+    console.error(error);
+    throw new Error("Guest not found");
+  }
+
+  return data;
+}
 export async function createEditGuest(newGuest, id) {
   let query = supabase.from("guests");
   if (!id) query = query.insert([newGuest]);

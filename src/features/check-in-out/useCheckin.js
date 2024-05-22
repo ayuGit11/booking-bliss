@@ -14,7 +14,7 @@ export default function useCheckin() {
     onSuccess: (data) => {
       toast.success(`Booking #${data.id} successfully checked in`);
       queryClient.invalidateQueries({ active: true });
-      navigate("/");
+      navigate("/admin/dashboard");
     },
     onError: () => toast.error("There was an error while checking in"),
   });

@@ -7,7 +7,7 @@ export async function signup({ fullName, email, password }) {
     options: {
       data: {
         fullName,
-        avatar: "",
+        avatar: "/public/default-user.jpg",
       },
     },
   });
@@ -16,7 +16,6 @@ export async function signup({ fullName, email, password }) {
 
   return data;
 }
-
 export async function login({ email, password }) {
   let { data, error } = await supabase.auth.signInWithPassword({
     email,

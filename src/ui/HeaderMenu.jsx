@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import styled from "styled-components";
 import { HiOutlineUser } from "react-icons/hi2";
 import Logout from "../features/authentication/Logout";
@@ -9,12 +10,24 @@ const StyledHeaderMenu = styled.ul`
   display: flex;
   gap: 0.4rem;
 `;
+
 export default function HeaderMenu() {
   const navigate = useNavigate();
+  const [userIconActive, setUserIconActive] = useState(false);
+
+  const handleUserIconClick = () => {
+    if (userIconActive) {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/admin/account");
+    }
+    setUserIconActive(!userIconActive);
+  };
+
   return (
     <StyledHeaderMenu>
       <li>
-        <ButtonIcon onClick={() => navigate("/account")}>
+        <ButtonIcon onClick={handleUserIconClick}>
           <HiOutlineUser />
         </ButtonIcon>
       </li>

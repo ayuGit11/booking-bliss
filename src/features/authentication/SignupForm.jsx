@@ -16,7 +16,7 @@ function SignupForm() {
     signup(
       { fullName, email, password },
       {
-        onSettled: () => reset(),
+        onSuccess: () => reset(), // Reset the form on success
       }
     );
   }
@@ -79,7 +79,6 @@ function SignupForm() {
       </FormRow>
 
       <FormRow>
-        {/* type is an HTML attribute! */}
         <Button
           variation="secondary"
           type="reset"

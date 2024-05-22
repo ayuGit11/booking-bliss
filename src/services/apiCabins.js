@@ -55,6 +55,19 @@ export async function createEditCabin(newCabin, id) {
 
   return data;
 }
+export async function getCabin(id) {
+  const { data, error } = await supabase
+    .from("cabins")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Cabin not found");
+  }
+  return data;
+}
 export async function deleteCabin(id) {
   const { data, error } = await supabase.from("cabins").delete().eq("id", id);
   if (error) {

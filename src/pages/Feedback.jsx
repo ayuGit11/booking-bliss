@@ -48,7 +48,7 @@ export default function Feedback() {
   const navigate = useNavigate();
   function handleFeedback(userRating) {
     editBooking({ newBookingData: { userRating }, id: bookingId });
-    navigate(`/bookings`);
+    navigate(`/admin/bookings`);
   }
   return (
     <>

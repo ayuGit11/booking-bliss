@@ -11,8 +11,8 @@ export default function Bookings() {
         <BookingTableOperations />
       </Row>
       <Row>
-        <BookingTable />
         <AddBooking />
+        <BookingTable />
       </Row>
     </>
   );

@@ -16,7 +16,7 @@ export default function ProtectedRoute({ children }) {
   useEffect(
     function () {
       if (!isAuthenticated && !isLoading) {
-        navigate("/login");
+        navigate("/admin/login");
       }
     },
     [isAuthenticated, isLoading, navigate]

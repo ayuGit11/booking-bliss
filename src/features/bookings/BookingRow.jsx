@@ -110,7 +110,7 @@ function BookingRow({ booking }) {
           <Menus.Toggle id={bookingId} />
           <Menus.List id={bookingId}>
             <Menus.Button
-              onClick={() => navigate(`/bookings/${bookingId}`)}
+              onClick={() => navigate(`/admin/bookings/${bookingId}`)}
               icon={<HiEye />}
             >
               See details
@@ -118,7 +118,7 @@ function BookingRow({ booking }) {
             {status === "unconfirmed" && (
               <Menus.Button
                 onClick={() => {
-                  navigate(`/checkin/${bookingId}`);
+                  navigate(`/admin/checkin/${bookingId}`);
                   if (isOffer) {
                     toast.success(
                       `Congratulations🥳🥳 You get ${offPrice} off on your booking.`
@@ -138,7 +138,7 @@ function BookingRow({ booking }) {
               <Menus.Button
                 onClick={() => {
                   checkout(bookingId);
-                  navigate(`/checkout/${bookingId}`);
+                  navigate(`/admin/checkout/${bookingId}`);
                 }}
                 disabled={isCheckingOut}
                 icon={<HiArrowUpOnSquare />}

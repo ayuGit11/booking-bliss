@@ -3,15 +3,14 @@ import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FormRow from "../../ui/FormRow";
-import PropTypes from "prop-types";
-import { useCreateBooking } from "./useCreateBooking";
-import { useCabins } from "../cabins/useCabins";
+import { useCreateBooking } from "../bookings/useCreateBooking";
 import { usePackages } from "../packages/usePackages";
 import Select from "../../ui/Select";
 
-function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
+function UserCreateBookingForm({ bookingToEdit = {}, onCloseModal, cabin }) {
   const { id: editId, ...editValues } = bookingToEdit;
   const isEditSession = Boolean(editId);
+  const { id: cabinId, maxCapacity: capacity } = cabin;
   const { register, handleSubmit, reset, formState, watch, setValue } = useForm(
     {
       defaultValues: isEditSession ? editValues : {},
@@ -20,12 +19,14 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
   const { errors } = formState;
   const { isCreating, createBooking } = useCreateBooking();
   const isWorking = isCreating;
-  const { cabins } = useCabins();
   const { packages } = usePackages();
+
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0];
 
   function onSubmit(data) {
     createBooking(
-      { ...data },
+      { ...data, cabinId: cabinId },
       {
         onSuccess: () => {
           reset();
@@ -44,6 +45,7 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
         <Input
           type="date"
           id="startDate"
+          min={today} // Set the minimum date to today
           disabled={isWorking}
           {...register("startDate", { required: "This field is required" })}
         />
@@ -53,6 +55,7 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
         <Input
           type="date"
           id="endDate"
+          min={today} // Set the minimum date to today
           disabled={isWorking}
           {...register("endDate", { required: "This field is required" })}
         />
@@ -69,6 +72,10 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
               value: 1,
               message: "numGuests should be at least 1",
             },
+            max: {
+              value: capacity,
+              message: `numGuests should not exceed ${capacity}`,
+            },
           })}
         />
       </FormRow>
@@ -81,64 +88,18 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
             required: "This field is required",
             min: {
               value: 1,
-              message: "numGuests should be at least 1",
+              message: "numNights should be at least 1",
             },
           })}
         />
       </FormRow>
-
-      <FormRow label="Status">
-        <Select
-          value={watch("status")}
-          onChange={(e) => setValue("status", e.target.value)}
-          disabled={isWorking}
-          options={[
-            { value: "checked-in", label: "Checked In" },
-            { value: "unconfirmed", label: "Unconfirmed" },
-            { value: "checked-out", label: "Checked Out" },
-          ]}
-        />
-      </FormRow>
-
-      <FormRow label="Is Paid">
-        <Select
-          value={watch("isPaid")}
-          onChange={(e) => setValue("isPaid", e.target.value)}
-          disabled={isWorking}
-          options={[
-            { value: true, label: "Yes" },
-            { value: false, label: "No" },
-          ]}
-        />
-      </FormRow>
-
-      <FormRow label="Package Name">
-        <Select
-          value={watch("packageId")}
-          onChange={(e) => setValue("packageId", e.target.value)}
-          options={
-            packages &&
-            packages.map((pack) => ({
-              value: pack.id,
-              label: pack.name,
-            }))
-          }
-          disabled={isWorking}
-        />
-      </FormRow>
-
       <FormRow label="Cabin Id">
-        <Select
-          value={watch("cabinId")} // Assuming you're using react-hook-form's watch function
-          onChange={(e) => setValue("cabinId", e.target.value)} // Assuming you're using react-hook-form's setValue function
-          options={
-            cabins &&
-            cabins.map((cabin) => ({
-              value: cabin.id,
-              label: cabin.name,
-            }))
-          }
-          disabled={isWorking}
+        <Input
+          type="number"
+          id="cabinId"
+          value={cabinId}
+          disabled={true}
+          {...register("cabinId")}
         />
       </FormRow>
 
@@ -148,6 +109,20 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
           id="guestId"
           disabled={isWorking}
           {...register("guestId", { required: "This field is required" })}
+        />
+      </FormRow>
+      <FormRow label="Package Name">
+        <Select
+          value={watch("packageId")}
+          onChange={(e) => setValue("packageId", e.target.value)}
+          options={
+            packages &&
+            packages.map((pack) => ({
+              value: pack.id,
+              label: `${pack.name} (Price: Rs.${pack.price})`,
+            }))
+          }
+          disabled={isWorking}
         />
       </FormRow>
 
@@ -165,8 +140,5 @@ function CreateBookingForm({ bookingToEdit = {}, onCloseModal }) {
     </Form>
   );
 }
-CreateBookingForm.propTypes = {
-  bookingToEdit: PropTypes.object.isRequired, // Adjust the prop type according to your cabin object structure
-  onCloseModal: PropTypes.object.isRequired,
-};
-export default CreateBookingForm;
+
+export default UserCreateBookingForm;

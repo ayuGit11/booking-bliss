@@ -31,6 +31,10 @@ const GlobalStyles = createGlobalStyle`
   --color-red-700: #b91c1c;
   --color-red-800: #991b1b;
 
+  --color-orange-200: #fed7aa;
+  --color-teal-200:#99f6e4;
+
+
   --backdrop-color: rgba(255, 255, 255, 0.1);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -69,6 +73,9 @@ const GlobalStyles = createGlobalStyle`
 --color-red-100: #fee2e2;
 --color-red-700: #b91c1c;
 --color-red-800: #991b1b;
+
+--color-orange-200: #c2410c;
+--color-teal-200:#0d9488;
 
 --backdrop-color: rgba(0, 0, 0, 0.3);
 

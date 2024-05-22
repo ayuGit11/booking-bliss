@@ -2,6 +2,8 @@ import styled from "styled-components";
 import LoginForm from "../features/authentication/LoginForm";
 import Logo from "../ui/Logo";
 import Heading from "../ui/Heading";
+import Button from "../ui/Button";
+import { useNavigate } from "react-router-dom";
 
 const LoginLayout = styled.main`
   min-height: 100vh;
@@ -27,9 +29,22 @@ const Container = styled.div`
   box-shadow: 0 0 10px rgba(204, 251, 74, 0.1);
 `;
 
+const Btn = styled.ul`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.8rem;
+`;
 function Login() {
+  const navigate = useNavigate();
   return (
     <LoginLayout>
+      <Btn>
+        <Button onClick={() => navigate(`/`)}>&larr; Home</Button>
+      </Btn>
       <Container>
         <Logo />
         <LoginContainer>

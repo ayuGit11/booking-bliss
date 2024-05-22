@@ -11,7 +11,7 @@ function CheckoutButton({ bookingId }) {
       size="small"
       onClick={() => {
         checkout(bookingId);
-        navigate(`/checkout/${bookingId}`);
+        navigate(`/admin/checkout/${bookingId}`);
       }}
       disabled={isLoading}
     >

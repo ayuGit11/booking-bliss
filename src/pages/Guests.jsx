@@ -11,8 +11,8 @@ function Guests() {
       </Row>
 
       <Row>
-        <GuestTable />
         <AddGuest />
+        <GuestTable />
       </Row>
     </>
   );

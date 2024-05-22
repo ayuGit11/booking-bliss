@@ -13,8 +13,8 @@ function Cabins() {
       </Row>
 
       <Row>
-        <PackageTable />
         <AddPackage />
+        <PackageTable />
       </Row>
     </>
   );

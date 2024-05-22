@@ -3,7 +3,6 @@ import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FormRow from "../../ui/FormRow";
-import PropTypes from "prop-types";
 import { useCreateGuest } from "./useCreateGuest";
 
 function CreateGuestForm({ onCloseModal }) {
@@ -84,9 +83,5 @@ function CreateGuestForm({ onCloseModal }) {
     </Form>
   );
 }
-CreateGuestForm.propTypes = {
-  guestToEdit: PropTypes.object.isRequired, // Adjust the prop type according to your cabin object structure
-  onCloseModal: PropTypes.object.isRequired,
-};
 
 export default CreateGuestForm;
